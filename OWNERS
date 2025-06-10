@@ -1,0 +1,3 @@
+approvers:
+  - romdalf
+component: netapp-openshift-console-trident

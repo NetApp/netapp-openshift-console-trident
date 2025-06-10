@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.plugin.name }}-deployment
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "susanoo.labels" . | nindent 4 }}
+    app.openshift.io/runtime-namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.plugin.replicas }}
+  selector:
+    matchLabels:
+      {{- include "susanoo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+            {{- include "susanoo.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.plugin.name }}-registry-secret
+      containers:
+        - name: {{ template "susanoo.name" . }}
+          image: {{ required "Plugin image must be specified!" .Values.plugin.image }}
+          ports:
+            - containerPort: {{ .Values.plugin.port }}
+              protocol: TCP
+          imagePullPolicy: {{ .Values.plugin.imagePullPolicy }}
+          {{- if and (.Values.plugin.securityContext.enabled) (.Values.plugin.containerSecurityContext) }}
+          securityContext: {{ tpl (toYaml (omit .Values.plugin.containerSecurityContext "enabled")) $ | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.plugin.resources | nindent 12 }}
+          volumeMounts:
+            - name: console-serving-cert
+              readOnly: true
+              mountPath: /var/serving-cert
+            - name: susanoo-nginx-config
+              readOnly: true
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: console-serving-cert
+          secret:
+            secretName: console-serving-cert
+            defaultMode: 420
+        - name: susanoo-nginx-config
+          configMap:
+            name: {{ .Values.plugin.name }}-configmap
+            defaultMode: 420
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%

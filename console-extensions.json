@@ -1,0 +1,83 @@
+[
+  {
+    "type": "console.flag/model",
+    "properties": {
+      "flag": "CONSOLE_CUSTOMIZATIONS",
+      "model": {
+        "group": "console.openshift.io",
+        "version": "v1",
+        "kind": "ConsoleLink"
+      }
+    }
+  },  
+  {
+    "type": "console.flag/model",
+    "properties": {
+      "flag": "NETAPP_IOS",
+      "model": {
+        "group": "netapp.com",
+        "version": "v1",
+        "kind": "Susanoo"
+      }
+    }
+  },
+  {
+    "type": "console.navigation/section",
+    "properties": {
+      "id": "admin-susanoo-section",
+      "perspective": "admin",
+      "name": "NetApp Storage Console",
+      "insertBefore": "builds"
+    }
+  }, 
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": ["/susanoo-storage"],
+      "component": { 
+        "$codeRef": "SusanooStorage" 
+      }
+    }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "admin-susanoo-storage",
+      "name": "Storage",
+      "href": "/susanoo-storage",
+      "perspective": "admin",
+      "section": "admin-susanoo-section"
+    }
+  },  
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": ["/susanoo-backend"],
+      "component": { 
+        "$codeRef": "SusanooBackendSetup" 
+      }
+    }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "admin-susanoo-backend",
+      "name": "Setup",
+      "href": "/susanoo-backend",
+      "perspective": "admin",
+      "section": "admin-susanoo-section"
+    }
+  },      
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": ["/susanoo-create-object"],
+      "component": { 
+        "$codeRef": "SusanooObjectCreate" 
+      }
+    }
+  }
+]

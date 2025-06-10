@@ -1,0 +1,24 @@
+apiVersion: console.openshift.io/v1alpha1
+kind: ConsolePlugin
+metadata:
+  name: netapp-openshift-console-trident
+  namespace: netapp-openshift-console-trident
+spec:
+  displayName: 'netapp-openshift-console-trident'
+  service:
+    name: netapp-openshift-console-trident
+    namespace: netapp-openshift-console-trident
+    port: 9443
+    basePath: /
+  extensions:
+    - type: console.catalog/item-type
+      properties:
+        type: netapp
+        title: "Netapp Openshift Console for Trident"
+        catalogDescription: "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines."
+        filters:
+          tags:
+            - netapp
+            - storage
+            - trident
+            - patterns

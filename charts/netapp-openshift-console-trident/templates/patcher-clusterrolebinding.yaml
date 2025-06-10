@@ -1,0 +1,17 @@
+{{- if .Values.plugin.jobs.patchConsoles.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "susanoo.patcherName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "susanoo.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "susanoo.patcherName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "susanoo.patcherServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

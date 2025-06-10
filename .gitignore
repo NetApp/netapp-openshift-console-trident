@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/.DS_Store
+**/.devcontainer
+**/.vscode
+.ci-operator.yaml
+.eslintrc.yml 
+.stylelintrc.yaml 
+integration-tests/videos
+integration-tests/screenshots
+*.*.backup

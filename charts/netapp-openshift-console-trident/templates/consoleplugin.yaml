@@ -1,0 +1,16 @@
+apiVersion: console.openshift.io/v1
+kind: ConsolePlugin
+metadata:
+  name: {{ .Values.plugin.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "susanoo.labels" . | nindent 4 }}
+spec:
+  displayName: 'Susanoo by NetApp'
+  backend:
+    type: Service
+    service:
+      name: {{ template "susanoo.name" . }}
+      namespace: {{ .Release.Namespace }}
+      port: 9443
+      basePath: '/'
