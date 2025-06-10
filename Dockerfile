@@ -12,8 +12,8 @@ RUN mv ../NOTICE.txt dist/
 
 FROM registry.access.redhat.com/ubi9/nginx-120:latest
 
-LABEL io.k8s.display-name="Susanoo by NetAPp" \
-      io.k8s.description="NetApp's Susanoo plugin for OpenShift Console" \
+LABEL io.k8s.display-name="netapp-openshift-console-trident" \
+      io.k8s.description="NetApp storage console for Red Hat OpenShift" \
       io.openshift.tags="openshift" \
       maintainer="Rom Adams @ NetApp"
 
