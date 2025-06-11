@@ -11,7 +11,7 @@ netapp-openshift-console-trident deploys as a native Red Hat OpenShift console p
 
 ## Pre-requisites and Deployment
 
-This project is currently in a pre-release phase and requires an Early Access Program agreement granting access token to deploy the plugin on your Red Hat OpenShift cluster.
+This project is currently in a pre-release phase and requires an Early Access Program agreement granting access token to deploy the plugin on your Red Hat OpenShift cluster.   
 The netapp-openshift-console-protect plugin is compatible with Red Hat OpenShift Container Platform 4.14, 4.15, 4.16, and 4.17. 
 
 Documentation is available [here](DOCS.md).
