@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.plugin.name }}-configmap
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "susanoo.labels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 data:
   nginx.conf: |
     error_log /dev/stdout info;

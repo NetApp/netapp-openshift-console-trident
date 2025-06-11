@@ -6,11 +6,11 @@ metadata:
   labels:
     {{- include "susanoo.labels" . | nindent 4 }}
 spec:
-  displayName: 'Susanoo by NetApp'
+  displayName: 'netapp-openshift-console-trident'
   backend:
     type: Service
     service:
-      name: {{ template "susanoo.name" . }}
+      name: {{ template "netapp-openshift-console-trident.name" . }}
       namespace: {{ .Release.Namespace }}
       port: 9443
       basePath: '/'

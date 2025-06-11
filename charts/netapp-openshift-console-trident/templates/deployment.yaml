@@ -4,22 +4,22 @@ metadata:
   name: {{ .Values.plugin.name }}-deployment
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "susanoo.labels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
     app.openshift.io/runtime-namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.plugin.replicas }}
   selector:
     matchLabels:
-      {{- include "susanoo.selectorLabels" . | nindent 6 }}
+      {{- include "netapp-openshift-console-trident.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-            {{- include "susanoo.labels" . | nindent 8 }}
+            {{- include "netapp-openshift-console-trident.labels" . | nindent 8 }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.plugin.name }}-registry-secret
       containers:
-        - name: {{ template "susanoo.name" . }}
+        - name: {{ template "netapp-openshift-console-trident.name" . }}
           image: {{ required "Plugin image must be specified!" .Values.plugin.image }}
           ports:
             - containerPort: {{ .Values.plugin.port }}
@@ -34,7 +34,7 @@ spec:
             - name: console-serving-cert
               readOnly: true
               mountPath: /var/serving-cert
-            - name: susanoo-nginx-config
+            - name: netapp-openshift-console-trident-nginx-config
               readOnly: true
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
@@ -43,7 +43,7 @@ spec:
           secret:
             secretName: console-serving-cert
             defaultMode: 420
-        - name: susanoo-nginx-config
+        - name: netapp-openshift-console-trident-nginx-config
           configMap:
             name: {{ .Values.plugin.name }}-configmap
             defaultMode: 420

@@ -6,7 +6,7 @@ metadata:
   name: {{ .Values.plugin.name }}-service
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "susanoo.labels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 spec:
   ports:
     - name: {{ .Values.plugin.port }}-tcp
@@ -14,6 +14,6 @@ spec:
       port: {{ .Values.plugin.port }}
       targetPort: {{ .Values.plugin.port }}
   selector:
-    {{- include "susanoo.selectorLabels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.selectorLabels" . | nindent 4 }}
   type: ClusterIP
   sessionAffinity: None

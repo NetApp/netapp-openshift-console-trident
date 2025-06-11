@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "susanoo.name" -}}
+{{- define "netapp-openshift-console-trident.name" -}}
 {{- default (default .Chart.Name .Release.Name) .Values.plugin.name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -9,16 +9,16 @@ Expand the name of the chart.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "susanoo.chart" -}}
+{{- define "netapp-openshift-console-trident.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "susanoo.labels" -}}
-helm.sh/chart: {{ include "susanoo.chart" . }}
-{{ include "susanoo.selectorLabels" . }}
+{{- define "netapp-openshift-console-trident.labels" -}}
+helm.sh/chart: {{ include "netapp-openshift-console-trident.chart" . }}
+{{ include "netapp-openshift-console-trident.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -28,26 +28,26 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "susanoo.selectorLabels" -}}
-app: {{ include "susanoo.name" . }}
-app.kubernetes.io/name: {{ include "susanoo.name" . }}
+{{- define "netapp-openshift-console-trident.selectorLabels" -}}
+app: {{ include "netapp-openshift-console-trident.name" . }}
+app.kubernetes.io/name: {{ include "netapp-openshift-console-trident.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/part-of: {{ include "susanoo.name" . }}
+app.kubernetes.io/part-of: {{ include "netapp-openshift-console-trident.name" . }}
 {{- end }}
 
 {{/*
 Create the name secret containing the certificate
 */}}
-{{- define "susanoo.certificateSecret" -}}
-{{ default (printf "%s-cert" (include "susanoo.name" .)) .Values.plugin.certificateSecretName }}
+{{- define "netapp-openshift-console-trident.certificateSecret" -}}
+{{ default (printf "%s-cert" (include "netapp-openshift-console-trident.name" .)) .Values.plugin.certificateSecretName }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "susanoo.serviceAccountName" -}}
+{{- define "netapp-openshift-console-trident.serviceAccountName" -}}
 {{- if .Values.plugin.serviceAccount.create }}
-{{- default (include "susanoo.name" .) .Values.plugin.serviceAccount.name }}
+{{- default (include "netapp-openshift-console-trident.name" .) .Values.plugin.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.plugin.serviceAccount.name }}
 {{- end }}
@@ -56,16 +56,16 @@ Create the name of the service account to use
 {{/*
 Create the name of the patcher
 */}}
-{{- define "susanoo.patcherName" -}}
-{{- printf "%s-patcher" (include "susanoo.name" .) }}
+{{- define "netapp-openshift-console-trident.patcherName" -}}
+{{- printf "%s-patcher" (include "netapp-openshift-console-trident.name" .) }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "susanoo.patcherServiceAccountName" -}}
+{{- define "netapp-openshift-console-trident.patcherServiceAccountName" -}}
 {{- if .Values.plugin.patcherServiceAccount.create }}
-{{- default (printf "%s-patcher" (include "susanoo.name" .)) .Values.plugin.patcherServiceAccount.name }}
+{{- default (printf "%s-patcher" (include "netapp-openshift-console-trident.name" .)) .Values.plugin.patcherServiceAccount.name }}
 {{- else }}
 {{- default "default" .Values.plugin.patcherServiceAccount.name }}
 {{- end }}

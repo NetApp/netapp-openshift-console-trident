@@ -29,7 +29,7 @@ Log in as user:
 Use the 'oc' command line interface:
   $ eval $(crc oc-env)
   $ oc login -u developer https://api.crc.testing:6443
-romv@romv-mac-0 susanoo-openshift % 
+romv@romv-mac-0 netapp-openshift-console-trident % 
 ``` 
 
 - ensure the following dependencies are met:
@@ -40,7 +40,7 @@ romv@romv-mac-0 susanoo-openshift %
 
 - clone this repository
 ```
-git clone https://github.com/NetApp/susanoo-openshift.git
+git clone https://github.com/NetApp/netapp-openshift-console-trident.git
 ```
 - install all the code dependencies:
 ```
@@ -48,7 +48,7 @@ yarn install
 ```
 expected output:
 ```
-romv@romv-mac-0 susanoo-openshift % yarn install
+romv@romv-mac-0 netapp-openshift-console-trident % yarn install
 yarn install v1.22.22
 [1/4] 🔍  Resolving packages...
 [2/4] 🚚  Fetching packages...
@@ -70,7 +70,7 @@ yarn run start
 ```
 expected output:
 ```
-romv@romv-mac-0 susanoo-openshift % yarn start  
+romv@romv-mac-0 netapp-openshift-console-trident % yarn start  
 yarn run v1.22.22
 $ yarn webpack serve --progress
 $ node -r ts-node/register ./node_modules/.bin/webpack serve --progress
@@ -111,7 +111,7 @@ oc login <cluster_url>
 ```
 expected output:
 ```
-romv@romv-mac-0 susanoo-openshift % oc login -u kubeadmin
+romv@romv-mac-0 netapp-openshift-console-trident % oc login -u kubeadmin
 Logged into "https://api.crc.testing:6443" as "kubeadmin" using existing credentials.
 
 You have access to 65 projects, the list has been suppressed. You can list all projects with 'oc projects'

@@ -2,10 +2,10 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "susanoo.patcherName" . }}
+  name: {{ template "netapp-openshift-console-trident.patcherName" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "susanoo.labels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 rules:
   - apiGroups: ["operator.openshift.io"]
     resources: ["consoles"]
