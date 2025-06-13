@@ -1,3 +1,6 @@
+[![CodeQL](https://github.com/NetApp/netapp-openshift-console-trident/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/NetApp/netapp-openshift-console-trident/actions/workflows/github-code-scanning/codeql)
+[![Docker Image CI](https://github.com/NetApp/netapp-openshift-console-trident/actions/workflows/docker-image.yml/badge.svg)](https://github.com/NetApp/netapp-openshift-console-trident/actions/workflows/docker-image.yml)
+
 # netapp-openshift-console-trident
 
 The open-source project netapp-openshift-console-trident has been designed to improve the user experience connecting Red Hat OpenShift with the NetApp portfolio.
