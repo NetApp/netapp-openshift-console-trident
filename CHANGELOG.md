@@ -1,4 +1,4 @@
-# Change Log
+# Change Log for netapp-openshift-console-trident
 
 The releases are using a YY.MM.DD format as versioning like 25.6.25 for June 25th 2025 release.
  
