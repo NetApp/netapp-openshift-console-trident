@@ -3,8 +3,8 @@ kind: Service
 metadata:
   annotations:
     service.alpha.openshift.io/serving-cert-secret-name: console-serving-cert
-  name: {{ .Values.plugin.name }}-service
-  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.plugin.name }}
+  namespace: {{ .Values.plugin.namespace }}
   labels:
     {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 spec:

@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ template "netapp-openshift-console-trident.patcherName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.plugin.namespace }}
   labels:
     {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 rules:

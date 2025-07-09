@@ -1,9 +1,12 @@
 ---
 plugin:
   name: "netapp-openshift-console-trident"
-  description: "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines"
-  image: ""
-  imagePullPolicy: Always
+  namespace: "netapp-openshift-console-trident"
+  description: "NetApp Console Plug-in for Red Hat OpenShift provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines"
+  image:
+    repository: ghcr.io/netapp/netapp-openshift-console-trident
+    tag: 25.6.25
+    pullPolicy: Always 
   imageCredentials:
     registry: ghcr.io
     username: ""

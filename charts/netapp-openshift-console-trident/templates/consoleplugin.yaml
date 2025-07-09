@@ -2,15 +2,15 @@ apiVersion: console.openshift.io/v1
 kind: ConsolePlugin
 metadata:
   name: {{ .Values.plugin.name }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.plugin.namespace }}
   labels:
-    {{- include "susanoo.labels" . | nindent 4 }}
+    {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
 spec:
   displayName: 'netapp-openshift-console-trident'
   backend:
     type: Service
     service:
       name: {{ template "netapp-openshift-console-trident.name" . }}
-      namespace: {{ .Release.Namespace }}
+      namespace: {{ .Values.plugin.namespace }}
       port: 9443
       basePath: '/'

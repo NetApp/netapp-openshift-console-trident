@@ -13,18 +13,18 @@
   {
     "type": "console.flag/model",
     "properties": {
-      "flag": "NETAPP_IOS",
+      "flag": "NETAPP_CONSOLE_TRIDENT",
       "model": {
         "group": "netapp.com",
         "version": "v1",
-        "kind": "Susanoo"
+        "kind": "netapp-openshift-console-trident"
       }
     }
   },
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "admin-susanoo-section",
+      "id": "admin-trident-section",
       "perspective": "admin",
       "name": "NetApp Storage Console",
       "insertBefore": "builds"
@@ -43,11 +43,11 @@
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-storage",
+      "id": "admin-trident-storage",
       "name": "Storage",
       "href": "/susanoo-storage",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-trident-section"
     }
   },  
   {
@@ -63,11 +63,11 @@
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-backend",
+      "id": "admin-trident-backend",
       "name": "Setup",
       "href": "/susanoo-backend",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-trident-section"
     }
   },      
   {

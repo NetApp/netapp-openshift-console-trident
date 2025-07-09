@@ -157,7 +157,7 @@ const SusanooConsolePlugin = () => {
 
   return (
     <>
-      <ListPageHeader title="Susanoo">
+      <ListPageHeader title="NetApp OpenShift Console for Trident">
         <Button 
           variant='primary'
           onClick={handleModalToggle}
@@ -171,7 +171,7 @@ const SusanooConsolePlugin = () => {
           brandImageSrc={NetAppLogo}
           backgroundImageSrc='/assets/netapp-logo.svg'
           trademark='NETAPP, the NETAPP logo, and the marks listed on the NetApp Trademarks page are trademarks of NetApp, Inc. Other company and product names may be trademarks of their respective owners.'
-          aria-label='About Susanoo Plugin'
+          aria-label='About NetApp Trident OpenShift Console Plug-in'
         >
           <SusanooPluginAbout />
         </AboutModal>
@@ -181,7 +181,7 @@ const SusanooConsolePlugin = () => {
           <CardTitle>Plugins</CardTitle>
           <CardBody>
             <SusanooTable 
-              data={data.filter(item => item.metadata.name === 'susanoo')}
+              data={data.filter(item => item.metadata.name === 'netapp-openshift-console-trident')}
               unfilteredData={data}
               loaded={loaded}
               error={error}

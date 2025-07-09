@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "netapp-openshift-console-trident.patcherName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.plugin.namespace }}
   labels:
     {{- include "netapp-openshift-console-trident.labels" . | nindent 4 }}
   annotations:
