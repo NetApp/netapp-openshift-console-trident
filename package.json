@@ -1,6 +1,6 @@
 {
   "name": "netapp-openshift-console-trident",
-  "version": "25.6.25",
+  "version": "25.7.16",
   "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
   "private": true,
   "license": "Apache-2.0",
@@ -101,13 +101,13 @@
   },
   "consolePlugin": {
     "name": "netapp-openshift-console-trident",
-    "version": "25.6.25",
+    "version": "25.7.16",
     "displayName": "Netapp Openshift Console for Trident",
     "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
     "exposedModules": {
-      "SusanooStorage": "./components/storage/SusanooStorage",
-      "SusanooBackendSetup": "./components/backend/SusanooBackendSetup",
-      "SusanooObjectCreate": "./components/SusanooObjectCreate"
+      "ConsoleTrident": "./components/storage/SusanooStorage",
+      "ConsoleTridentBackend": "./components/backend/SusanooBackendSetup",
+      "ConsoleTridentObjectCreate": "./components/SusanooObjectCreate"
     },
     "dependencies": {
       "@console/pluginAPI": "*"

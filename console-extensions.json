@@ -13,20 +13,20 @@
   {
     "type": "console.flag/model",
     "properties": {
-      "flag": "NETAPP_IOS",
+      "flag": "NETAPP_CONSOLE_TRIDENT",
       "model": {
         "group": "netapp.com",
         "version": "v1",
-        "kind": "Susanoo"
+        "kind": "netapp-openshift-console-trident"
       }
     }
   },
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "admin-susanoo-section",
+      "id": "admin-console-trident-section",
       "perspective": "admin",
-      "name": "NetApp Storage Console",
+      "name": "NetApp Trident Console",
       "insertBefore": "builds"
     }
   }, 
@@ -34,49 +34,49 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-storage"],
+      "path": ["/console-trident-storage"],
       "component": { 
-        "$codeRef": "SusanooStorage" 
+        "$codeRef": "ConsoleTrident" 
       }
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-storage",
+      "id": "admin-console-trident-storage",
       "name": "Storage",
-      "href": "/susanoo-storage",
+      "href": "/console-trident-storage",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-console-trident-section"
     }
   },  
   {
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-backend"],
+      "path": ["/console-trident-backend"],
       "component": { 
-        "$codeRef": "SusanooBackendSetup" 
+        "$codeRef": "ConsoleTridentBackend" 
       }
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-backend",
+      "id": "admin-console-trident-backend",
       "name": "Setup",
-      "href": "/susanoo-backend",
+      "href": "/console-trident-backend",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-console-trident-section"
     }
   },      
   {
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-create-object"],
+      "path": ["/console-trident-create-object"],
       "component": { 
-        "$codeRef": "SusanooObjectCreate" 
+        "$codeRef": "ConsoleTridentObjectCreate" 
       }
     }
   }

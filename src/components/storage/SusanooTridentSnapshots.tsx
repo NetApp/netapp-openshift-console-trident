@@ -177,7 +177,7 @@ export const TridentSnapshotStatus: React.FC<SusanooTridentSnapshotsProps> = ({ 
           variant="primary"
           onClick={() => {
             history.push({
-              pathname: '/susanoo-create-object',
+              pathname: '/console-trident-create-object',
               state: { 
                 initialResource: {
                   apiVersion: 'snapshot.storage.k8s.io/v1',

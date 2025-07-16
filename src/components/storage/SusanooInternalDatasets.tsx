@@ -155,7 +155,7 @@ const SusanooTable: React.FC<SusanooVSTableProps> = ({ data, unfilteredData, loa
                         }
 
                         history.push({
-                            pathname: '/susanoo-create-object',
+                            pathname: '/console-trident-create-object',
                             state: { 
                                 initialResource: baseResource
                             }
