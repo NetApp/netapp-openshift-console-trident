@@ -20,11 +20,6 @@ import {
   Card, 
   CardBody, 
   CardTitle, 
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
-  MenuToggleElement,
   Modal,
   Popover,
   ProgressStep,
@@ -40,11 +35,8 @@ import {
   WizardStep,
 } from '@patternfly/react-core';
 import { 
-  EllipsisVIcon,
+  TrashIcon
 } from '@patternfly/react-icons';
-import { 
-  useHistory 
-} from 'react-router';
 import SusanooPluginAbout from '../SusanooPluginAbout';
 import NetAppLogo from '../../assets/images/NA_logo_white_rgb.png';
 import SusanooTridentOperatorDetails from './trident/SusanooTridentOperatorDetails';
@@ -54,6 +46,7 @@ import SusanooTridentStorageClassDetails from './trident/SusanooTridentStorageCl
 import SusanooTridentVolumeSnapshotClassDetails from './trident/SusanooTridentVolumeSnapshotClassDetails';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 import SusanooTridentActivationDetails from './trident/SusanooTridentActivationDetails';
+import { k8sDelete, useK8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 // Defining generic table props
 type SusanooTableProps = {
@@ -77,8 +70,31 @@ const SusanooConsolePlugin = () => {
 
     const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
 
-      const history = useHistory();
-      const [isOpen, setIsOpen] = React.useState(false);
+      // Add confirmDelete logic and modal state
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+      const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
+
+      // You may need to adjust this if ConsolePlugin is not a CustomizationResource
+      const [k8sModel] = useK8sModel(getGroupVersionKindForResource(obj));
+
+      const handleDelete = async () => {
+        if (resourceToDelete) {
+          try {
+            await k8sDelete({ model: k8sModel, resource: resourceToDelete });
+            console.log('ConsolePlugin deleted successfully');
+          } catch (err) {
+            console.error('Failed to delete ConsolePlugin:', err);
+          } finally {
+            setIsDeleteModalOpen(false);
+            setResourceToDelete(null);
+          }
+        }
+      };
+
+      const confirmDelete = (resource: CustomizationResource) => {
+        setResourceToDelete(resource);
+        setIsDeleteModalOpen(true);
+      };
 
       return (
         <>
@@ -99,31 +115,28 @@ const SusanooConsolePlugin = () => {
             {obj.metadata?.creationTimestamp}
           </TableData>
           <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
-            <Dropdown
-              isOpen={isOpen}
-              onSelect={(_event, value) => {
-                if (value === 'disable') {
-                  history.push(`/k8s/cluster/operator.openshift.io~v1~Console/cluster/console-plugins`);
-                }
-                setIsOpen(false);
-              }}
-              onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                <MenuToggle
-                  ref={toggleRef}
-                  aria-label="plugin-actions"
-                  variant="plain"
-                  onClick={() => setIsOpen(!isOpen)}
-                  isExpanded={isOpen}
-                >
-                  <EllipsisVIcon />
-                </MenuToggle>
-              )}
+            <Button
+              variant="plain"
+              aria-label="Delete"
+              onClick={() => confirmDelete(obj)}
+              icon={<TrashIcon />}
+            />
+            <Modal
+              variant="small"
+              title="Confirm Delete"
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              actions={[
+                <Button key="confirm" variant="danger" onClick={handleDelete}>
+                  Delete
+                </Button>,
+                <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                  Cancel
+                </Button>
+              ]}
             >
-              <DropdownList>
-                <DropdownItem value="disable" key="disable">Disable</DropdownItem>
-              </DropdownList>
-            </Dropdown>
+              Are you sure you want to delete this ConsolePlugin?
+            </Modal>
           </TableData>
         </>
       );
