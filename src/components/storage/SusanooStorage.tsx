@@ -46,6 +46,7 @@ import { EllipsisVIcon } from '@patternfly/react-icons';
 import CreatePersistentVolumeClaim from './SusanooTridentCreatePersistentVolumeClaim';
 import InternalDatasets from './SusanooInternalDatasets';
 import ImportPVCForm from './SusanooImportPersistentVolumeClaim';
+import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 
 type SusanooDatasetsProps = {
   data: CustomizationResource[];
@@ -320,6 +321,7 @@ export const filters: RowFilter[] = [
   ];
 
 const SusanooTridentVolumes = () => {
+  const { isValidKey, isLoading } = useActivationKeyCheck();
 
   // Define the resources to be used in the table
   const resources = {
@@ -364,6 +366,24 @@ const SusanooTridentVolumes = () => {
   const handleHelpModalToggle = () => {
     setIsHelpModalOpen(!isHelpModalOpen);
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
+  if (!isValidKey) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <Alert variant="danger" title="EAP Key expired">
+          The Early Access Program activation key is missing or expired. Please contact your administrator.
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <>
