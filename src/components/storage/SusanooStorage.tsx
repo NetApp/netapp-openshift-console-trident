@@ -336,6 +336,18 @@ const SusanooTridentVolumes = () => {
     namespaced: true,
   });
 
+  const snapshotsResource = {
+    group: 'snapshot.storage.k8s.io',
+    version: 'v1',
+    kind: 'VolumeSnapshot',
+  };
+
+  const [volumeSnapshots] = useK8sWatchResource<CustomizationResource[]>({
+    groupVersionKind: snapshotsResource,
+    isList: true,
+    namespaced: true,
+  });
+
   const volume = '';
 
   const [data, filteredData, onFilterChange] = useListPageFilter(pvc, filters); 
@@ -377,13 +389,12 @@ const SusanooTridentVolumes = () => {
 
   if (!isValidKey) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
         <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
           The Early Access Program activation key is missing or expired. Please contact your NetApp EAP Contact.
         </Alert>
-      </div>
     );
   }
+
 
   return (
     <>
@@ -539,16 +550,16 @@ const SusanooTridentVolumes = () => {
                 <LabelGroup >
                   <Label color="blue">
                     <span>Total: </span>
-                    {pvc.filter(pvc => pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
+                    {volumeSnapshots.length || 0}
                   </Label>
-                  <Label color="purple">
+                  {/* <Label color="purple">
                     <span>ReadWriteOnce: </span>
                     {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteOnce') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
                   </Label>
                   <Label color="purple">
                     <span>ReadWriteMany: </span>
                     {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteMany') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
-                  </Label>
+                  </Label> */}
                 </LabelGroup>
               </Level>
             )}

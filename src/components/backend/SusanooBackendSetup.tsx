@@ -196,7 +196,7 @@ const SusanooConsolePlugin = () => {
           <CardTitle>Plugins</CardTitle>
           <CardBody>
             <SusanooTable 
-              data={data.filter(item => item.metadata.name === 'susanoo')}
+              data={data.filter(item => item.metadata.name === 'netapp-openshift-console-protect')}
               unfilteredData={data}
               loaded={loaded}
               error={error}
