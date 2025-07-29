@@ -35,6 +35,7 @@ import {
   WizardStep,
 } from '@patternfly/react-core';
 import { 
+  ExternalLinkAltIcon,
   TrashIcon
 } from '@patternfly/react-icons';
 import SusanooPluginAbout from '../SusanooPluginAbout';
@@ -47,6 +48,7 @@ import SusanooTridentVolumeSnapshotClassDetails from './trident/SusanooTridentVo
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 import SusanooTridentActivationDetails from './trident/SusanooTridentActivationDetails';
 import { k8sDelete, useK8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import { useHistory } from 'react-router-dom';
 
 // Defining generic table props
 type SusanooTableProps = {
@@ -96,6 +98,8 @@ const SusanooConsolePlugin = () => {
         setIsDeleteModalOpen(true);
       };
 
+      const history = useHistory();
+
       return (
         <>
           <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
@@ -115,6 +119,14 @@ const SusanooConsolePlugin = () => {
             {obj.metadata?.creationTimestamp}
           </TableData>
           <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
+            <Button
+              variant="plain"
+              aria-label="Disable"
+              icon={<ExternalLinkAltIcon />}
+              onClick={() => {
+                history.push(`/k8s/cluster/operator.openshift.io~v1~Console/cluster/console-plugins`);
+              }}
+            />
             <Button
               variant="plain"
               aria-label="Delete"
@@ -196,7 +208,7 @@ const SusanooConsolePlugin = () => {
           <CardTitle>Plugins</CardTitle>
           <CardBody>
             <SusanooTable 
-              data={data.filter(item => item.metadata.name === 'netapp-openshift-console-protect')}
+              data={data.filter(item => item.metadata.name === 'netapp-openshift-console-trident')}
               unfilteredData={data}
               loaded={loaded}
               error={error}
