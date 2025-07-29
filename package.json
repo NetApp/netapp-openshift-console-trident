@@ -1,6 +1,6 @@
 {
   "name": "netapp-openshift-console-trident",
-  "version": "25.7.16",
+  "version": "25.7.29",
   "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
   "private": true,
   "license": "Apache-2.0",
@@ -101,7 +101,7 @@
   },
   "consolePlugin": {
     "name": "netapp-openshift-console-trident",
-    "version": "25.7.16",
+    "version": "25.7.29",
     "displayName": "Netapp Openshift Console for Trident",
     "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
     "exposedModules": {

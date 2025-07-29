@@ -52,6 +52,8 @@ import SusanooTridentOrchestratorDetails from './trident/SusanooTridentOrchestra
 import SusanooTridentBackendConfigDetails from './trident/SusanooTridentBackendConfigDetails';
 import SusanooTridentStorageClassDetails from './trident/SusanooTridentStorageClassDetails';
 import SusanooTridentVolumeSnapshotClassDetails from './trident/SusanooTridentVolumeSnapshotClassDetails';
+import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
+import SusanooTridentActivationDetails from './trident/SusanooTridentActivationDetails';
 
 // Defining generic table props
 type SusanooTableProps = {
@@ -196,6 +198,8 @@ const SusanooConsolePlugin = () => {
 // Logic to display the Trident deployment progress via a ProgressStepper
 export const SusanooTridentDeployProgress = () => {
 
+  const {isValidKey, isLoading } = useActivationKeyCheck();
+
   const subscriptionResources = {
     group: 'operators.coreos.com',
     version: 'v1alpha1',
@@ -266,6 +270,10 @@ export const SusanooTridentDeployProgress = () => {
   const isStorageClassPresent = storageclassData.some(row => (row.provisioner === 'csi.trident.netapp.io'));
   const isVolumeSnapshotClassPresent = snapshotclassData.some(row => (row.driver === 'csi.trident.netapp.io'));
 
+  if (isLoading) {
+    return <div></div>;
+  }
+
   return (
     <>
       <ListPageHeader title="Trident">
@@ -287,6 +295,21 @@ export const SusanooTridentDeployProgress = () => {
               aria-label="Trident Operator Installation Progress" 
               isCenterAligned
               >
+                <ProgressStep
+                  variant={isValidKey ? 'success' : 'warning'}   
+                  id="protect-3"
+                  titleId='protect-3' 
+                  popoverRender={(stepRef) =>
+                    <Popover 
+                      ariad-label="Activate EAP"
+                      headerContent="Trident Protect EAP Activation"
+                      bodyContent={isValidKey ? "Trident Protect EAP successfully activated." : "Click Actions to enter the activation key."}
+                      triggerRef={stepRef}
+                    />
+                  }
+                >
+                  EAP Activation
+                </ProgressStep>                   
                 <ProgressStep
                   variant={isOperatorPresent ? 'success' : 'pending'}   
                   id="trident-1"
@@ -406,6 +429,13 @@ export const SusanooTridentDeployProgress = () => {
                 </TextList>
               </TextContent>
             </WizardStep>
+            <WizardStep name="Activation" id="trident-activation">
+              <TextContent>
+              <SusanooTridentActivationDetails application={selectedResource.name} />
+                <Text component={TextVariants.h1}>Help</Text>
+                <Text component={TextVariants.p}>This steps enables the Early Access Program for Trident Protect with the provided key by NetApp.</Text>
+              </TextContent>
+            </WizardStep>            
             <WizardStep name="Operator" id="trident-operator">
               <SusanooTridentOperatorDetails application={selectedResource.name} />
               <TextContent>

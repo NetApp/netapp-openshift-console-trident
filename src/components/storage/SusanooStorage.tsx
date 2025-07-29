@@ -378,8 +378,8 @@ const SusanooTridentVolumes = () => {
   if (!isValidKey) {
     return (
       <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <Alert variant="danger" title="EAP Key expired">
-          The Early Access Program activation key is missing or expired. Please contact your administrator.
+        <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
+          The Early Access Program activation key is missing or expired. Please contact your NetApp EAP Contact.
         </Alert>
       </div>
     );

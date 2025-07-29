@@ -18,21 +18,22 @@ import {
   Button, 
   Modal 
 } from '@patternfly/react-core';
-import SusanooTridentOperatorForm from './SusanooTridentCreateOperator';
 import { TrashIcon } from '@patternfly/react-icons';
+import SusanooTridentCreateActivationKey from '../../storage/SusanooTridentCreateActivationKey';
+import { jwtDecode }  from 'jwt-decode';
 
-type SusanooTridentOperatorProps = {
+type SusanooTridentActivationProps = {
   application: string;
 };
 
-const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ application }) => {
+const SusanooTridentActivation: React.FC<SusanooTridentActivationProps> = ({ application }) => {
   
     const columns: TableColumn<CustomizationResource>[] = [
       { title: 'Name', id: 'name' },
-      { title: 'Channel', id: 'channel' },
-      { title: 'Install plan', id: 'installPlan' },
-      { title: 'Current version', id: 'currentVersion' },
-      { title: '', id: 'actions' }
+      { title: 'Namespace', id: 'namespace' },
+      { title: 'Created at', id: 'creationTimestamp'},
+      { title: 'Expiration', id: 'expiration' },
+      { title: '', id: 'actions' },
     ];
   
     const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
@@ -46,9 +47,9 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
           if (resourceToDelete) {
             try {
               await k8sDelete({ model: k8sModel, resource: resourceToDelete });
-              console.log('Trident Operator deleted successfully');
+              console.log('Trident Activation deleted successfully');
             } catch (err) {
-              console.error('Failed to delete Trident Operator:', err);
+              console.error('Failed to delete Trident Activation:', err);
             } finally {
               setIsDeleteModalOpen(false);
               setResourceToDelete(null);
@@ -61,24 +62,40 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
           setIsDeleteModalOpen(true);
         };
 
+        // Extract and decode JWT expiration
+        let expString = '';
+        try {
+          const encoded = obj.data?.activationKey;
+          if (encoded) {
+            const decoded = atob(encoded);
+            const jwt: any = jwtDecode(decoded);
+            if (jwt.exp) {
+              const date = new Date(jwt.exp * 1000);
+              expString = date.toLocaleString();
+            }
+          }
+        } catch {
+          expString = '';
+        }
+
         return (
           <>
             <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
-              <ResourceLink
+              <ResourceLink 
                 groupVersionKind={getGroupVersionKindForResource(obj)}
                 name={obj.metadata?.name}
                 namespace={obj.metadata?.namespace}
               />
             </TableData>
             <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs}>
-              {obj.spec?.channel}
+              {obj.metadata?.namespace}
             </TableData>
             <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs}>
-              {obj.spec?.installPlanApproval}
+              {obj.metadata?.creationTimestamp}
             </TableData>
             <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
-              {obj.status?.currentCSV}
-            </TableData>  
+              {expString}
+            </TableData>
             <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
               <Button
                 variant="plain"
@@ -102,7 +119,7 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
                 </Button>
               ]}
             >
-              Are you sure you want to delete this Trident Operator?
+              Are you sure you want to delete this Trident Activation?
             </Modal>
           </>
         );
@@ -123,7 +140,7 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
     }: SusanooTableProps) => {
         return (
             <VirtualizedTable<K8sResourceCommon>
-              aria-label='Trident Operator'
+              aria-label='Trident backendconfig'
               data={data}
               unfilteredData={unfilteredData}
               loaded={loaded}
@@ -135,9 +152,8 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
     };
 
     const resources = {
-      group: 'operators.coreos.com',
-      version: 'v1alpha1',
-      kind: 'Subscription',
+      version: 'v1',
+      kind: 'Secret',
     };
   
     const [data, loaded, error] = useK8sWatchResource<CustomizationResource[]>({
@@ -146,30 +162,31 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
       namespaced: true,
     });
     
-    const operator = 'trident-operator';
-    const isOperatorPresent = data.some(row => (row.metadata.name === operator));
     const [isOpen, setIsOpen] = React.useState(false);
   
     return (
       <>
-        <ListPageHeader title="Trident Operator">
+        <ListPageHeader title="Trident EAP Activation">
           <Button 
             variant="primary"
             onClick={() => {setIsOpen(true);}}
-            isDisabled={isOperatorPresent}
           >
             Create
           </Button>
         </ListPageHeader>
         <ListPageBody>
           <CustomizationTable 
-            data={data.filter((item => item.metadata.name === operator))}
+            data={data.filter(
+              (item) =>
+                item.metadata?.name?.includes('eap-activation-key') &&
+                item.metadata?.namespace === 'trident'
+            )}
             unfilteredData={data}
             loaded={loaded}
             error={error}
           />
         </ListPageBody>
-        <SusanooTridentOperatorForm 
+        <SusanooTridentCreateActivationKey 
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
         />
@@ -177,10 +194,10 @@ const SusanooTridentOperator: React.FC<SusanooTridentOperatorProps> = ({ applica
     );
 };
 
-const SusanooTridentOperatorDetails: React.FC<SusanooTridentOperatorProps> = ({ application }) => {
+const SusanooTridentActivationDetails: React.FC<SusanooTridentActivationProps> = ({ application }) => {
     return (
-        <SusanooTridentOperator application={application} />
+        <SusanooTridentActivation application={application} />
     );
 }
 
-export default SusanooTridentOperatorDetails;
+export default SusanooTridentActivationDetails;

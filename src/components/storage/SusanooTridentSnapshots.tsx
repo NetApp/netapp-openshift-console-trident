@@ -14,8 +14,8 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { useHistory } from 'react-router-dom';
 import { CustomizationResource } from '../../k8s/types';
-import { Button, Dropdown, DropdownItem, DropdownList, Label, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
+import { Button, Label, Modal } from '@patternfly/react-core';
+import { TrashIcon } from '@patternfly/react-icons';
 
 interface SusanooTridentSnapshotsProps {
   persistentVolumeClaim: CustomizationResource;
@@ -43,15 +43,28 @@ export const TridentSnapshotStatus: React.FC<SusanooTridentSnapshotsProps> = ({ 
   
   const Row = ({ obj, activeColumnIDs }: RowProps<CustomizationResource>) => {
     const groupVersionKind = getGroupVersionKindForResource(obj);  
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+    const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
     
-    const [isOpen, setIsOpen] = React.useState(false); 
     const [k8sModel] = useK8sModel(getGroupVersionKindForResource(obj));
     const handleDelete = async () => {
-      try {
-        k8sDelete({ model: k8sModel, resource: obj });
-      } catch (err) {
-        console.error('Failed to delete PersistentVolumeClaim:', err);
+      if (resourceToDelete) {
+        try {
+          await k8sDelete({ model: k8sModel, resource: resourceToDelete });
+          console.log('VolumeSnapshot deleted successfully');
+        } catch (err) {
+          console.error('Failed to delete VolumeSnapshot:', err);
+        } finally {
+          setIsDeleteModalOpen(false);
+          setResourceToDelete(null);
+        }
       }
+    };
+
+    const confirmDelete = (resource: CustomizationResource) => {
+      setResourceToDelete(resource);
+      setIsDeleteModalOpen(true);
     };
 
     const getStatusLabelColor = (phase?: string): 'green' | 'red' => {
@@ -90,38 +103,28 @@ export const TridentSnapshotStatus: React.FC<SusanooTridentSnapshotsProps> = ({ 
           {obj.metadata.creationTimestamp}
         </TableData>
         <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs}>
-          <Dropdown
-            isOpen={isOpen}
-            onSelect={(_event, value) => {
-              if (value === 'delete') {
-                handleDelete();
-              }
-              setIsOpen(false);
-            }}
-            onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-            toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-              <MenuToggle
-                ref={toggleRef}
-                aria-label="Actions"
-                variant="plain"
-                onClick={() => setIsOpen(!isOpen)}
-                isExpanded={isOpen}
-              >
-                <EllipsisVIcon />
-              </MenuToggle>
-            )}
-          >
-            <DropdownList>
-              <DropdownItem
-                value="delete"
-                key="delete"
-                className="pf-m-danger"
-                description={"Delete the VolumeSnapshot"}
-              >
+          <Button
+            variant="plain"
+            aria-label="Delete"
+            onClick={() => confirmDelete(obj)}
+            icon={<TrashIcon />}
+          />
+          <Modal
+            variant="small"
+            title="Confirm Delete"
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            actions={[
+              <Button key="confirm" variant="danger" onClick={handleDelete}>
                 Delete
-              </DropdownItem>
-            </DropdownList>
-          </Dropdown>            
+              </Button>,
+              <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                Cancel
+              </Button>
+            ]}
+          >
+            Are you sure you want to delete this VolumeSnapshot?
+          </Modal>          
         </TableData>
       </>
     );
