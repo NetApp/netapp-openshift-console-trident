@@ -2,8 +2,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@utils/*": ["src/utils/*"],
-      "@mocks/*": ["src/__mocks__/*"],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@mocks/*": [
+        "src/__mocks__/*"
+      ],
     },
     "module": "esnext",
     "moduleResolution": "node",
@@ -12,13 +16,17 @@
     "jsx": "react",
     "allowJs": true,
     "strict": false,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src",
     "src/__mocks__"
   ],
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
     "files": true,
     "transpileOnly": true,
