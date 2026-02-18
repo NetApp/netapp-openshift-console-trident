@@ -15,30 +15,30 @@ import {
   useListPageFilter,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from '../../k8s/types';
-import { 
+import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-  Button, 
-  Card, 
-  CardBody, 
-  CardExpandableContent, 
-  CardHeader, 
-  CardTitle, 
-  Divider, 
-  Dropdown, 
-  DropdownItem, 
-  DropdownList, 
-  Flex, 
-  Gallery, 
-  GalleryItem, 
-  Grid, 
-  Label, 
-  LabelGroup, 
-  Level, 
-  MenuToggle, 
-  MenuToggleElement, 
-  Modal, 
+  Button,
+  Card,
+  CardBody,
+  CardExpandableContent,
+  CardHeader,
+  CardTitle,
+  Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  Flex,
+  Gallery,
+  GalleryItem,
+  Grid,
+  Label,
+  LabelGroup,
+  Level,
+  MenuToggle,
+  MenuToggleElement,
+  Modal,
   Stack
 } from '@patternfly/react-core';
 import SusanooTridentSnapshots from './SusanooTridentSnapshots';
@@ -46,7 +46,6 @@ import { EllipsisVIcon } from '@patternfly/react-icons';
 import CreatePersistentVolumeClaim from './SusanooTridentCreatePersistentVolumeClaim';
 import InternalDatasets from './SusanooInternalDatasets';
 import ImportPVCForm from './SusanooImportPersistentVolumeClaim';
-import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 
 type SusanooDatasetsProps = {
   data: CustomizationResource[];
@@ -62,7 +61,7 @@ type Toast = {
 };
 
 // Logic to build a generic table template used by all below Status logics
-const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data, unfilteredData, loaded, error, value}) => {
+const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data, unfilteredData, loaded, error, value }) => {
 
   const columns: TableColumn<CustomizationResource>[] = [
     { title: 'Name', id: 'name' },
@@ -72,19 +71,19 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
     { title: 'Exported to', id: 'exportedto' },
     { title: '', id: 'actions' },
   ];
-  
+
   const getPhaseLabelColor = (phase?: string): 'green' | 'blue' | 'grey' => {
     switch (phase) {
-        case 'Bound':
-            return 'green';
-        case 'Released':
-            return 'blue';
-        default:
-            return 'grey';
+      case 'Bound':
+        return 'green';
+      case 'Released':
+        return 'blue';
+      default:
+        return 'grey';
     }
   };
-  
-  const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
+
+  const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs }) => {
 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const handleModalToggle = () => {
@@ -97,11 +96,11 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
         variant,
       }]);
     };
-  
+
     const removeToast = (id: string) => {
       setToasts(toasts => toasts.filter(toast => toast.id !== id));
     };
-    const [isOpen, setIsOpen] = React.useState(false); 
+    const [isOpen, setIsOpen] = React.useState(false);
     const [toasts, setToasts] = React.useState<Toast[]>([]);
 
     const handleDelete = async () => {
@@ -142,10 +141,10 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
 
     const getOCPAILabelColor = (phase?: string): 'green' | 'grey' => {
       switch (phase) {
-          case 'true':
-              return 'green';
-          default:
-              return 'grey';
+        case 'true':
+          return 'green';
+        default:
+          return 'grey';
       }
     };
 
@@ -157,33 +156,33 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
 
     return (
       <>
-      <AlertGroup isToast>
-        {toasts.map(({ id, variant, title }) => (
-          <Alert
-            key={id}
-            variant={variant}
-            title={title}
-            actionClose={
-              <AlertActionCloseButton
-                title={title}
-                onClose={() => removeToast(id)}
-              />
-            }
-          />
-        ))}
-      </AlertGroup>      
+        <AlertGroup isToast>
+          {toasts.map(({ id, variant, title }) => (
+            <Alert
+              key={id}
+              variant={variant}
+              title={title}
+              actionClose={
+                <AlertActionCloseButton
+                  title={title}
+                  onClose={() => removeToast(id)}
+                />
+              }
+            />
+          ))}
+        </AlertGroup>
         <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs} >
           <ResourceLink
             groupVersionKind={getGroupVersionKindForResource(obj)}
             name={obj.metadata?.name}
             namespace={obj.metadata?.namespace}
           />
-        </TableData> 
+        </TableData>
         <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
           <Label color={getPhaseLabelColor(obj.status?.phase)}>
             {obj.status?.phase}
           </Label>
-        </TableData>           
+        </TableData>
         <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
           <ResourceLink
             groupVersionKind={{
@@ -193,8 +192,8 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
             }}
             name={obj.metadata?.namespace}
             namespace={obj.metadata?.namespace}
-            />
-        </TableData>             
+          />
+        </TableData>
         <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
           {obj.spec?.accessModes}
         </TableData>
@@ -202,7 +201,7 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
           <Label color={getOCPAILabelColor(obj.metadata?.labels?.['opendatahub.io/dashboard'])} >
             {obj.metadata?.labels?.['opendatahub.io/dashboard'] ? 'OpenShift AI' : 'None'}
           </Label>
-        </TableData>    
+        </TableData>
         <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
           <Dropdown
             isOpen={isOpen}
@@ -243,18 +242,18 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
           isOpen={isModalOpen}
           onClose={handleModalToggle}
           actions={[
-            <Button 
+            <Button
               aria-label="details"
-              key="link" 
-              variant="primary" 
+              key="link"
+              variant="primary"
               onClick={() => window.open(`/k8s/ns/${obj.spec.claimRef.namespace}/persistentvolumeclaims/${obj.spec.claimRef.name}/volumesnapshots`, '_blank')}
             >
               Details
-          </Button>,
-            <Button 
+            </Button>,
+            <Button
               aria-label="close"
-              key="close" 
-              variant="primary" 
+              key="close"
+              variant="primary"
               onClick={handleModalToggle}
             >
               Close
@@ -263,11 +262,11 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
         >
           <SusanooTridentSnapshots persistentVolumeClaim={obj} />
         </Modal>
-          <ImportPVCForm
-            isOpen={isImportModalOpen}
-            onClose={handleImportModalToggle}
-            pvc={selectedPVC}
-          />
+        <ImportPVCForm
+          isOpen={isImportModalOpen}
+          onClose={handleImportModalToggle}
+          pvc={selectedPVC}
+        />
       </>
     );
   };
@@ -281,53 +280,52 @@ const SusanooTable: React.FC<SusanooDatasetsProps & { value: string }> = ({ data
     return pvList.sort((a, b) => {
       const statusA = a.status?.phase || 'Unknown';
       const statusB = b.status?.phase || 'Unknown';
-      
+
       return (statusPriority[statusA] ?? 2) - (statusPriority[statusB] ?? 2);
     });
   };
 
   return (
-      <VirtualizedTable<CustomizationResource>
-        data={sortByStatus(data.filter(pvc => pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io'))}
-        unfilteredData={unfilteredData}
-        loaded={loaded}
-        loadError={error}
-        columns={columns}
-        Row={SusanooTableRow}
-      />
+    <VirtualizedTable<CustomizationResource>
+      data={sortByStatus(data.filter(pvc => pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io'))}
+      unfilteredData={unfilteredData}
+      loaded={loaded}
+      loadError={error}
+      columns={columns}
+      Row={SusanooTableRow}
+    />
   );
 
 };
 
 export const filters: RowFilter[] = [
-    {
-      filterGroupName: 'Status',
-      type: 'pvc-status',
-      reducer: (pvc: CustomizationResource) => pvc.status?.phase || 'Unknown',
-      filter: (input, pvc) => {
-        if (input.selected?.length) {
-          return input.selected.includes(pvc.status?.phase || 'Unknown');
-        }
-        return true;
-      },
-      items: [
-        { id: 'Bound', title: 'Bound' },
-        { id: 'Pending', title: 'Pending' },
-        { id: 'Released', title: 'Released' },
-        { id: 'Terminating', title: 'Terminating' },
-        { id: 'Unknown', title: 'Unknown' }
-      ],
-    }
-  ];
+  {
+    filterGroupName: 'Status',
+    type: 'pvc-status',
+    reducer: (pvc: CustomizationResource) => pvc.status?.phase || 'Unknown',
+    filter: (input, pvc) => {
+      if (input.selected?.length) {
+        return input.selected.includes(pvc.status?.phase || 'Unknown');
+      }
+      return true;
+    },
+    items: [
+      { id: 'Bound', title: 'Bound' },
+      { id: 'Pending', title: 'Pending' },
+      { id: 'Released', title: 'Released' },
+      { id: 'Terminating', title: 'Terminating' },
+      { id: 'Unknown', title: 'Unknown' }
+    ],
+  }
+];
 
 const SusanooTridentVolumes = () => {
-  const { isValidKey, isLoading } = useActivationKeyCheck();
 
   // Define the resources to be used in the table
   const resources = {
-      group: '',
-      version: 'v1',
-      kind: 'PersistentVolumeClaim',
+    group: '',
+    version: 'v1',
+    kind: 'PersistentVolumeClaim',
   };
 
   const [pvc, loaded, error] = useK8sWatchResource<CustomizationResource[]>({
@@ -350,8 +348,8 @@ const SusanooTridentVolumes = () => {
 
   const volume = '';
 
-  const [data, filteredData, onFilterChange] = useListPageFilter(pvc, filters); 
-  const [isOpen, setIsOpen] = React.useState(false);   
+  const [data, filteredData, onFilterChange] = useListPageFilter(pvc, filters);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   // PVC Card Expansion
   const [isPVCCardExpanded, setIsPVCCardExpanded] = React.useState(false);
@@ -379,27 +377,12 @@ const SusanooTridentVolumes = () => {
     setIsHelpModalOpen(!isHelpModalOpen);
   };
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <span>Loading...</span>
-      </div>
-    );
-  }
-
-  if (!isValidKey) {
-    return (
-        <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
-          The Early Access Program activation key is missing or expired. Please contact your NetApp EAP Contact.
-        </Alert>
-    );
-  }
 
 
   return (
     <>
       <ListPageHeader title="Storage">
-        <Button 
+        <Button
           variant="primary"
           onClick={handleHelpModalToggle}
         >
@@ -416,20 +399,20 @@ const SusanooTridentVolumes = () => {
           The In-cluster assets section displays the PersistentVolumeClaims and VolumeSnapshots:
           <ul>
             <li>
-            The PersistentVolumeClaims section allows you to create, delete, import (to OpenShift AI), and access the snapshot list.
+              The PersistentVolumeClaims section allows you to create, delete, import (to OpenShift AI), and access the snapshot list.
             </li>
             <li>
-            The VolumeSnapshots section allows you to import a snapshot as a new PersistentVolumeClaim.
+              The VolumeSnapshots section allows you to import a snapshot as a new PersistentVolumeClaim.
             </li>
           </ul>
           <br />
           The External assets section displays the data sources available outside the cluster on a NetApp storage system that can be:
           <ul>
             <li>
-            Imported to OpenShift as a PersistentVolumeClaim for any workload usage.
+              Imported to OpenShift as a PersistentVolumeClaim for any workload usage.
             </li>
             <li>
-            Imported to OpenShift AI as a data connection (usually an S3 endpoint).
+              Imported to OpenShift AI as a data connection (usually an S3 endpoint).
             </li>
           </ul>
           <br /> <br />
@@ -437,32 +420,32 @@ const SusanooTridentVolumes = () => {
       </ListPageHeader>
       <ListPageBody>
 
-      <Grid>
-                <Gallery hasGutter minWidths={{ default: '430px' }}>
-                  <GalleryItem>
-                  <Card ouiaId='susanoo-trident-volumes-status'>
-                  <CardTitle style={{ textAlign: 'center' } as React.CSSProperties}>Usage</CardTitle>
-                    <CardBody style={{ textAlign: 'center' } as React.CSSProperties}>
-                      <Flex display={{ default: 'inlineFlex' }}>
-                        <Stack> 
-                          {pvc.filter(pvc => !pvc.metadata?.labels?.hasOwnProperty('opendatahub.io/dashboard')).length || 0}
-                          <span>OpenShift</span>
-                        </Stack>
-                        <Divider orientation={{ default: 'vertical' }} />
-                        <Stack> 
-                          {pvc.filter(pvc => pvc.metadata?.labels?.hasOwnProperty('opendatahub.io/dashboard')).length || 0}                        
-                          <span>OpenShift AI</span>
-                          </Stack>
-                          <Divider orientation={{ default: 'vertical' }} />
-                        <Stack> 
-                        {pvc.filter(pvc => pvc.metadata?.labels?.hasOwnProperty('backstage.io/dashboard')).length || 0}   
-                          <span>Developer Hub</span>
-                        </Stack>
-                      </Flex>
-                    </CardBody>
-                  </Card>  
-                  </GalleryItem>
-                  {/* <GalleryItem>                
+        <Grid>
+          <Gallery hasGutter minWidths={{ default: '430px' }}>
+            <GalleryItem>
+              <Card ouiaId='susanoo-trident-volumes-status'>
+                <CardTitle style={{ textAlign: 'center' } as React.CSSProperties}>Usage</CardTitle>
+                <CardBody style={{ textAlign: 'center' } as React.CSSProperties}>
+                  <Flex display={{ default: 'inlineFlex' }}>
+                    <Stack>
+                      {pvc.filter(pvc => !pvc.metadata?.labels?.hasOwnProperty('opendatahub.io/dashboard')).length || 0}
+                      <span>OpenShift</span>
+                    </Stack>
+                    <Divider orientation={{ default: 'vertical' }} />
+                    <Stack>
+                      {pvc.filter(pvc => pvc.metadata?.labels?.hasOwnProperty('opendatahub.io/dashboard')).length || 0}
+                      <span>OpenShift AI</span>
+                    </Stack>
+                    <Divider orientation={{ default: 'vertical' }} />
+                    <Stack>
+                      {pvc.filter(pvc => pvc.metadata?.labels?.hasOwnProperty('backstage.io/dashboard')).length || 0}
+                      <span>Developer Hub</span>
+                    </Stack>
+                  </Flex>
+                </CardBody>
+              </Card>
+            </GalleryItem>
+            {/* <GalleryItem>                
                   <Card ouiaId='susanoo-trident-statistics'>
                   <CardTitle style={{ textAlign: 'center' } as React.CSSProperties} >Capacity</CardTitle>
                     <CardBody style={{ textAlign: 'center' } as React.CSSProperties}>
@@ -473,86 +456,86 @@ const SusanooTridentVolumes = () => {
                     </CardBody>
                   </Card>
                   </GalleryItem> */}
-                </Gallery>
-      </Grid>
+          </Gallery>
+        </Grid>
       </ListPageBody>
       <ListPageHeader title="In-cluster assets">
       </ListPageHeader>
       <ListPageBody>
         <Grid hasGutter>
-        <Card ouiaId='susanoo-trident-volumes' isExpanded={isPVCCardExpanded}>
-          <CardHeader
-            actions={{ actions: pvcCardAction}}
-            onExpand={onPVCCardExpand}
-            toggleButtonProps={{ 
-              'aria-label': 'Toggle Card',
-              'aria-expanded': isPVCCardExpanded,
-              'aria-labelledby': 'titleID toggle-button',
-              id: 'toggle-button' 
-            }}
-          >
-            {isPVCCardExpanded && <CardTitle id="titleID">PersistentVolumeClaims</CardTitle>}
-            {!isPVCCardExpanded && (
-              <Level hasGutter> 
-                <CardTitle id="titleID">PersistentVolumeClaims</CardTitle>
-                <LabelGroup>
-                  <Label color="blue">
-                    <span>Total: </span>
-                    {pvc.filter(pvc => pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
-                  </Label>
-                  <Label color="purple">
-                    <span>ReadWriteOnce: </span>
-                    {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteOnce') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
-                  </Label>
-                  <Label color="purple">
-                    <span>ReadWriteMany: </span>
-                    {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteMany') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
-                  </Label>
-                </LabelGroup>
-              </Level>
-            )}
-          </CardHeader>
-          <CardExpandableContent>
-            <CardBody>
-              <ListPageFilter
-                data={data}
-                loaded={loaded}
-                rowFilters={filters}
-                onFilterChange={onFilterChange}
-              />         
-              <SusanooTable 
-                data={filteredData}
-                unfilteredData={data}
-                loaded={loaded}
-                error={error}
-                value={volume}
-              />
-            </CardBody>
-          </CardExpandableContent>
-        </Card>
-      {/* </ListPageBody>
+          <Card ouiaId='susanoo-trident-volumes' isExpanded={isPVCCardExpanded}>
+            <CardHeader
+              actions={{ actions: pvcCardAction }}
+              onExpand={onPVCCardExpand}
+              toggleButtonProps={{
+                'aria-label': 'Toggle Card',
+                'aria-expanded': isPVCCardExpanded,
+                'aria-labelledby': 'titleID toggle-button',
+                id: 'toggle-button'
+              }}
+            >
+              {isPVCCardExpanded && <CardTitle id="titleID">PersistentVolumeClaims</CardTitle>}
+              {!isPVCCardExpanded && (
+                <Level hasGutter>
+                  <CardTitle id="titleID">PersistentVolumeClaims</CardTitle>
+                  <LabelGroup>
+                    <Label color="blue">
+                      <span>Total: </span>
+                      {pvc.filter(pvc => pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
+                    </Label>
+                    <Label color="purple">
+                      <span>ReadWriteOnce: </span>
+                      {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteOnce') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
+                    </Label>
+                    <Label color="purple">
+                      <span>ReadWriteMany: </span>
+                      {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteMany') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
+                    </Label>
+                  </LabelGroup>
+                </Level>
+              )}
+            </CardHeader>
+            <CardExpandableContent>
+              <CardBody>
+                <ListPageFilter
+                  data={data}
+                  loaded={loaded}
+                  rowFilters={filters}
+                  onFilterChange={onFilterChange}
+                />
+                <SusanooTable
+                  data={filteredData}
+                  unfilteredData={data}
+                  loaded={loaded}
+                  error={error}
+                  value={volume}
+                />
+              </CardBody>
+            </CardExpandableContent>
+          </Card>
+          {/* </ListPageBody>
       <ListPageBody> */}
-        <Card ouiaId='susanoo-trident-snapshots' isExpanded={isVSCardExpanded}>
-          <CardHeader
-            actions={{ actions: vsCardAction}}
-            onExpand={onVSCardExpand}
-            toggleButtonProps={{ 
-              'aria-label': 'Toggle Card',
-              'aria-expanded': isVSCardExpanded,
-              'aria-labelledby': 'titleID toggle-button',
-              id: 'toggle-button' 
-            }}
-          >
-            {isVSCardExpanded && <CardTitle id="titleID">VolumeSnapshots</CardTitle>}
-            {!isVSCardExpanded && (
-              <Level hasGutter> 
-                <CardTitle id="titleID">VolumeSnapshots</CardTitle>
-                <LabelGroup >
-                  <Label color="blue">
-                    <span>Total: </span>
-                    {volumeSnapshots.length || 0}
-                  </Label>
-                  {/* <Label color="purple">
+          <Card ouiaId='susanoo-trident-snapshots' isExpanded={isVSCardExpanded}>
+            <CardHeader
+              actions={{ actions: vsCardAction }}
+              onExpand={onVSCardExpand}
+              toggleButtonProps={{
+                'aria-label': 'Toggle Card',
+                'aria-expanded': isVSCardExpanded,
+                'aria-labelledby': 'titleID toggle-button',
+                id: 'toggle-button'
+              }}
+            >
+              {isVSCardExpanded && <CardTitle id="titleID">VolumeSnapshots</CardTitle>}
+              {!isVSCardExpanded && (
+                <Level hasGutter>
+                  <CardTitle id="titleID">VolumeSnapshots</CardTitle>
+                  <LabelGroup >
+                    <Label color="blue">
+                      <span>Total: </span>
+                      {volumeSnapshots.length || 0}
+                    </Label>
+                    {/* <Label color="purple">
                     <span>ReadWriteOnce: </span>
                     {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteOnce') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
                   </Label>
@@ -560,16 +543,16 @@ const SusanooTridentVolumes = () => {
                     <span>ReadWriteMany: </span>
                     {pvc.filter(pvc => pvc.spec.accessModes?.includes('ReadWriteMany') && pvc.metadata?.annotations?.['volume.kubernetes.io/storage-provisioner'] === 'csi.trident.netapp.io').length || 0}
                   </Label> */}
-                </LabelGroup>
-              </Level>
-            )}
-          </CardHeader>
-          <CardExpandableContent>
-            <CardBody>
-              <InternalDatasets />
-            </CardBody>
-          </CardExpandableContent>
-        </Card>
+                  </LabelGroup>
+                </Level>
+              )}
+            </CardHeader>
+            <CardExpandableContent>
+              <CardBody>
+                <InternalDatasets />
+              </CardBody>
+            </CardExpandableContent>
+          </Card>
         </Grid>
       </ListPageBody>
       <CreatePersistentVolumeClaim isOpen={isOpen} onClose={() => setIsOpen(false)} />

@@ -11,15 +11,15 @@ import {
   useK8sWatchResource,
   VirtualizedTable,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { 
-  CustomizationResource 
+import {
+  CustomizationResource
 } from '../../k8s/types';
-import { 
+import {
   AboutModal,
-  Button, 
-  Card, 
-  CardBody, 
-  CardTitle, 
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
   Modal,
   Popover,
   ProgressStep,
@@ -34,19 +34,17 @@ import {
   WizardHeader,
   WizardStep,
 } from '@patternfly/react-core';
-import { 
+import {
   ExternalLinkAltIcon,
   TrashIcon
 } from '@patternfly/react-icons';
 import SusanooPluginAbout from '../SusanooPluginAbout';
 import NetAppLogo from '../../assets/images/NA_logo_white_rgb.png';
 import SusanooTridentOperatorDetails from './trident/SusanooTridentOperatorDetails';
-import SusanooTridentOrchestratorDetails from './trident/SusanooTridentOrchestratorDetails'; 
+import SusanooTridentOrchestratorDetails from './trident/SusanooTridentOrchestratorDetails';
 import SusanooTridentBackendConfigDetails from './trident/SusanooTridentBackendConfigDetails';
 import SusanooTridentStorageClassDetails from './trident/SusanooTridentStorageClassDetails';
 import SusanooTridentVolumeSnapshotClassDetails from './trident/SusanooTridentVolumeSnapshotClassDetails';
-import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
-import SusanooTridentActivationDetails from './trident/SusanooTridentActivationDetails';
 import { k8sDelete, useK8sModel } from '@openshift-console/dynamic-plugin-sdk';
 import { useHistory } from 'react-router-dom';
 
@@ -61,16 +59,16 @@ type SusanooTableProps = {
 // Logic to display the Susanoo Console Plugin status
 const SusanooConsolePlugin = () => {
 
-  const SusanooTable: React.FC<SusanooTableProps> = ({ data, unfilteredData, loaded, error}) => {
+  const SusanooTable: React.FC<SusanooTableProps> = ({ data, unfilteredData, loaded, error }) => {
     const columns: TableColumn<K8sResourceCommon>[] = [
       { title: 'Name', id: 'name' },
-      { title: 'Version', id: 'version'},
-      { title: 'Display Name', id: 'displayName' }, 
+      { title: 'Version', id: 'version' },
+      { title: 'Display Name', id: 'displayName' },
       { title: 'Created at', id: 'creationTimestamp' },
       { title: '', id: 'actions' }
     ];
 
-    const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
+    const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs }) => {
 
       // Add confirmDelete logic and modal state
       const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
@@ -103,7 +101,7 @@ const SusanooConsolePlugin = () => {
       return (
         <>
           <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
-            <ResourceLink 
+            <ResourceLink
               groupVersionKind={getGroupVersionKindForResource(obj)}
               name={obj.metadata?.name}
               namespace={obj.metadata?.namespace}
@@ -180,18 +178,18 @@ const SusanooConsolePlugin = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
-  };   
+  };
 
   return (
     <>
       <ListPageHeader title="Susanoo">
-        <Button 
+        <Button
           variant='primary'
           onClick={handleModalToggle}
         >
           About
         </Button>
-        <AboutModal 
+        <AboutModal
           isOpen={isModalOpen}
           onClose={handleModalToggle}
           brandImageAlt='NetApp, Inc Logo'
@@ -207,7 +205,7 @@ const SusanooConsolePlugin = () => {
         <Card>
           <CardTitle>Plugins</CardTitle>
           <CardBody>
-            <SusanooTable 
+            <SusanooTable
               data={data.filter(item => item.metadata.name === 'netapp-openshift-console-trident')}
               unfilteredData={data}
               loaded={loaded}
@@ -217,13 +215,12 @@ const SusanooConsolePlugin = () => {
         </Card>
       </ListPageBody>
     </>
-  );  
+  );
 };
 
 // Logic to display the Trident deployment progress via a ProgressStepper
 export const SusanooTridentDeployProgress = () => {
 
-  const {isValidKey, isLoading } = useActivationKeyCheck();
 
   const subscriptionResources = {
     group: 'operators.coreos.com',
@@ -251,41 +248,41 @@ export const SusanooTridentDeployProgress = () => {
     kind: 'VolumeSnapshotClass',
   };
 
-  const [subscriptionData ] = useK8sWatchResource<CustomizationResource[]>({
+  const [subscriptionData] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: subscriptionResources,
     isList: true
   });
   const subscriptionObj = subscriptionData[0] || null;
-  const [orchestratorData ] = useK8sWatchResource<CustomizationResource[]>({
+  const [orchestratorData] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: orchestratorResources,
     isList: true
   });
   // const orchestratorObj = orchestratorData[0] || null;
-  const [backendconfigData ] = useK8sWatchResource<CustomizationResource[]>({
+  const [backendconfigData] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: backendconfigResources,
     isList: true,
     namespaced: true,
   });
   // const backendconfigObj = backendconfigData[0] || null;
-  const [storageclassData ] = useK8sWatchResource<CustomizationResource[]>({
+  const [storageclassData] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: storageclassResources,
     isList: true,
     namespaced: false,
   });
   // const storageclassObj = storageclassData[0] || null;
-  const [snapshotclassData ] = useK8sWatchResource<CustomizationResource[]>({
+  const [snapshotclassData] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: snapshotclassResources,
     isList: true
   });
   // const snapshotclassObj = snapshotclassData[0] || null;
 
-  const [ isWizardOpen, setIsWizardOpen ] = React.useState(false);
+  const [isWizardOpen, setIsWizardOpen] = React.useState(false);
   // const [ isOperatorOpen, setIsOperatorOpen ] = React.useState(false);
   // const [ isOrchestratorOpen, setIsOrchestratorOpen ] = React.useState(false);
   // const [ isBackendOpen, setIsBackendOpen ] = React.useState(false);
   // const [ isStorageClassOpen, setIsStorageClassOpen ] = React.useState(false);
   // const [ isSnapshotClassOpen, setIsSnapshotClassOpen ] = React.useState(false);
-  const [ selectedResource, setSelectedResource ] = React.useState<{ namespace: string, name: string } | null>(null);
+  const [selectedResource, setSelectedResource] = React.useState<{ namespace: string, name: string } | null>(null);
 
   const operator = 'trident-operator';
   const isOperatorPresent = subscriptionData.some(row => (row.metadata.name === operator));
@@ -295,9 +292,6 @@ export const SusanooTridentDeployProgress = () => {
   const isStorageClassPresent = storageclassData.some(row => (row.provisioner === 'csi.trident.netapp.io'));
   const isVolumeSnapshotClassPresent = snapshotclassData.some(row => (row.driver === 'csi.trident.netapp.io'));
 
-  if (isLoading) {
-    return <div></div>;
-  }
 
   return (
     <>
@@ -314,110 +308,95 @@ export const SusanooTridentDeployProgress = () => {
       </ListPageHeader>
       <ListPageBody>
         <Card ouiaId='trident-deploy-card'>
-         <CardTitle>Deployment Status</CardTitle>
+          <CardTitle>Deployment Status</CardTitle>
           <CardBody>
-            <ProgressStepper 
-              aria-label="Trident Operator Installation Progress" 
+            <ProgressStepper
+              aria-label="Trident Operator Installation Progress"
               isCenterAligned
+            >
+              <ProgressStep
+                variant={isOperatorPresent ? 'success' : 'pending'}
+                id="trident-1"
+                titleId='trident-1'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Trident Operator Installation"
+                    headerContent="Trident Operator"
+                    bodyContent={isOperatorPresent ? "Trident Operator installed successfully." : "Click Install to deploy the NetApp supported operator that manages Trident deployment and maintenance on Red Hat OpenShift."}
+                    triggerRef={stepRef}
+                  />
+                }
               >
-                <ProgressStep
-                  variant={isValidKey ? 'success' : 'warning'}   
-                  id="protect-3"
-                  titleId='protect-3' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Activate EAP"
-                      headerContent="Trident Protect EAP Activation"
-                      bodyContent={isValidKey ? "Trident Protect EAP successfully activated." : "Click Actions to enter the activation key."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  EAP Activation
-                </ProgressStep>                   
-                <ProgressStep
-                  variant={isOperatorPresent ? 'success' : 'pending'}   
-                  id="trident-1"
-                  titleId='trident-1' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Trident Operator Installation"
-                      headerContent="Trident Operator"
-                      bodyContent={isOperatorPresent ? "Trident Operator installed successfully." : "Click Install to deploy the NetApp supported operator that manages Trident deployment and maintenance on Red Hat OpenShift."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Operator
-                </ProgressStep>
-                <ProgressStep 
-                  variant={ 
-                    isOrchestratorInstalling ? 'warning'
-                    : isOrchestratorPresent ? 'success' : 'pending' }
-                  id="trident-2"
-                  titleId='trident-2'
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Trident Orchestrator Creation"
-                      headerContent="Trident Orchestrator"
-                      bodyContent={isOrchestratorPresent ? "Trident Orchestrator created successfully." : "Click Actions/Orchestrator to deploy the Trident Orchestrator required to interact with NetApp storage systems."}
-                      triggerRef={stepRef}
-                    />
-                  } 
-                >
-                  Orchestrator
-                </ProgressStep>
-                <ProgressStep 
-                  variant={isBackendConfigPresent ? 'success' : 'pending'}
-                  id="trident-3"
-                  titleId='trident-3'
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Trident BackendConfig Creation"
-                      headerContent="Trident BackendConfig"
-                      bodyContent={isBackendConfigPresent ? "Trident BackendConfig created successfully." : "Click Actions/BackendConfig to create a backend configuration to access a NetApp storage system."}
-                      triggerRef={stepRef}
-                    />
-                  }  
-                >
-                  BackendConfig
-                </ProgressStep>
-                <ProgressStep
-                  variant={isStorageClassPresent ? 'success' : 'pending'}
-                  id="trident-4"
-                  titleId='trident-4' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="StorageClass"
-                      headerContent="BackendConfig"
-                      bodyContent={isStorageClassPresent ? "StorageClass created successfully." : "Click Actions/StorageClass to create a StorageClass required to manage PVCs/PVs with Trident on a NetApp storage system."}
-                      triggerRef={stepRef}
-                    />
-                  }  
-                >
-                  StorageClass
-                </ProgressStep>
-                <ProgressStep 
-                  variant={isVolumeSnapshotClassPresent ? 'success' : 'pending'}
-                  id="trident-5"
-                  titleId='trident-'
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="VolumeSnapshotClass"
-                      headerContent="VolumeSnapshotClass"
-                      bodyContent={isVolumeSnapshotClassPresent ? "VolumeSnapshotClass created successfully." : "Click Actions/SnapshotClass to create a VolumeSnapshotClass required to manage snapshots of PVCs/PVs with Trident on a NetApp storage system."}
-                      triggerRef={stepRef}
-                    />
-                  }   
-                >
-                  VolumeSnapshotClass
-                </ProgressStep>
+                Operator
+              </ProgressStep>
+              <ProgressStep
+                variant={
+                  isOrchestratorInstalling ? 'warning'
+                    : isOrchestratorPresent ? 'success' : 'pending'}
+                id="trident-2"
+                titleId='trident-2'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Trident Orchestrator Creation"
+                    headerContent="Trident Orchestrator"
+                    bodyContent={isOrchestratorPresent ? "Trident Orchestrator created successfully." : "Click Actions/Orchestrator to deploy the Trident Orchestrator required to interact with NetApp storage systems."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                Orchestrator
+              </ProgressStep>
+              <ProgressStep
+                variant={isBackendConfigPresent ? 'success' : 'pending'}
+                id="trident-3"
+                titleId='trident-3'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Trident BackendConfig Creation"
+                    headerContent="Trident BackendConfig"
+                    bodyContent={isBackendConfigPresent ? "Trident BackendConfig created successfully." : "Click Actions/BackendConfig to create a backend configuration to access a NetApp storage system."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                BackendConfig
+              </ProgressStep>
+              <ProgressStep
+                variant={isStorageClassPresent ? 'success' : 'pending'}
+                id="trident-4"
+                titleId='trident-4'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="StorageClass"
+                    headerContent="BackendConfig"
+                    bodyContent={isStorageClassPresent ? "StorageClass created successfully." : "Click Actions/StorageClass to create a StorageClass required to manage PVCs/PVs with Trident on a NetApp storage system."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                StorageClass
+              </ProgressStep>
+              <ProgressStep
+                variant={isVolumeSnapshotClassPresent ? 'success' : 'pending'}
+                id="trident-5"
+                titleId='trident-'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="VolumeSnapshotClass"
+                    headerContent="VolumeSnapshotClass"
+                    bodyContent={isVolumeSnapshotClassPresent ? "VolumeSnapshotClass created successfully." : "Click Actions/SnapshotClass to create a VolumeSnapshotClass required to manage snapshots of PVCs/PVs with Trident on a NetApp storage system."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                VolumeSnapshotClass
+              </ProgressStep>
             </ProgressStepper>
           </CardBody>
         </Card>
       </ListPageBody>
       {selectedResource && (
-        <Modal 
+        <Modal
           aria-label='Trident Deployment Wizard'
           variant="large"
           isOpen={isWizardOpen}
@@ -443,7 +422,7 @@ export const SusanooTridentDeployProgress = () => {
                 <Text component={TextVariants.h1}>Trident</Text>
                 <Text component={TextVariants.p}>Trident is a fully-supported open source project maintained by NetApp. It has been designed to help you meet your containerized application's persistence demands using industry-standard interfaces, such as the Container Storage Interface (CSI).</Text>
                 <Text component={TextVariants.p}>Netapp Trident enables consumption and management of storage resources across all popular NetApp storage platforms, in the public cloud or on premises, including on-premises ONTAP clusters (AFF, FAS, and ASA), ONTAP Select, Cloud Volumes ONTAP, Element software (NetApp HCI, SolidFire), Azure NetApp Files, Amazon FSx for
-                NetApp ONTAP, and Cloud Volumes Service on Google Cloud.</Text>
+                  NetApp ONTAP, and Cloud Volumes Service on Google Cloud.</Text>
                 <Text component={TextVariants.p}>The following steps are required to deploy and configure Trident with your NetApp storage solution on Red Hat OpenShift:</Text>
                 <TextList component={TextListVariants.ol}>
                   <TextListItem>Install the Trident Operator</TextListItem>
@@ -454,18 +433,11 @@ export const SusanooTridentDeployProgress = () => {
                 </TextList>
               </TextContent>
             </WizardStep>
-            <WizardStep name="Activation" id="trident-activation">
-              <TextContent>
-              <SusanooTridentActivationDetails application={selectedResource.name} />
-                <Text component={TextVariants.h1}>Help</Text>
-                <Text component={TextVariants.p}>This steps enables the Early Access Program for Trident Protect with the provided key by NetApp.</Text>
-              </TextContent>
-            </WizardStep>            
             <WizardStep name="Operator" id="trident-operator">
               <SusanooTridentOperatorDetails application={selectedResource.name} />
               <TextContent>
-              <Text component={TextVariants.h1}>Help</Text>
-              <Text component={TextVariants.p}>The installation process leverage the usage of a Red Hat OpenShift Certified Operator to enhanced the maintenance lifecycle of the Trident components.</Text>
+                <Text component={TextVariants.h1}>Help</Text>
+                <Text component={TextVariants.p}>The installation process leverage the usage of a Red Hat OpenShift Certified Operator to enhanced the maintenance lifecycle of the Trident components.</Text>
               </TextContent>
             </WizardStep>
             <WizardStep name="Orchestrator" id="trident-orchestrator">
@@ -508,12 +480,12 @@ export const SusanooTridentDeployProgress = () => {
 
 };
 
-const SusanooBackendSetup = () => {  
+const SusanooBackendSetup = () => {
 
   return (
     <>
-        <SusanooConsolePlugin />
-        <SusanooTridentDeployProgress />
+      <SusanooConsolePlugin />
+      <SusanooTridentDeployProgress />
     </>
   );
 };
